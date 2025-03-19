@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 function App() {
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState([]);
 
-  const handleSendMessage = async () => {
-    try {
-      const res = await axios.post('http://127.0.0.1:5000/chatbot', { message });
-      setResponse(res.data);
-    } catch (error) {
-      console.error('Error:', error);
+  const handleSendMessage = () => {
+    if (message === '점심 먹을만한 곳 추천해줘') {
+      // Flask에서 반환하던 값 React에서 직접 처리
+      setResponse([
+        { name: '서브웨이', distance: '도보 2분', type: '샌드위치' },
+        { name: '샐러디', distance: '도보 3분', type: '샐러드' },
+        { name: '김밥천국', distance: '도보 3분', type: '한식' }
+      ]);
+    } else {
+      setResponse([{ response: `입력한 메시지: ${message}` }]);
     }
   };
 
@@ -27,7 +30,9 @@ function App() {
       <ul>
         {response.map((item, index) => (
           <li key={index}>
-            {item.name} - {item.distance} ({item.type})
+            {item.name 
+              ? `${item.name} - ${item.distance} (${item.type})` 
+              : item.response}
           </li>
         ))}
       </ul>
