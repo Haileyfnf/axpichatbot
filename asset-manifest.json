@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/axpichatbot/static/css/main.e6c13ad2.css",
+    "main.js": "/axpichatbot/static/js/main.9ad94031.js",
+    "index.html": "/axpichatbot/index.html",
+    "main.e6c13ad2.css.map": "/axpichatbot/static/css/main.e6c13ad2.css.map",
+    "main.9ad94031.js.map": "/axpichatbot/static/js/main.9ad94031.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.9ad94031.js"
+  ]
+}
