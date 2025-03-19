@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState([]);
+
+  // 네이버 지도 초기화
+  useEffect(() => {
+    if (window.naver) {
+      const map = new window.naver.maps.Map('map', {
+        center: new window.naver.maps.LatLng(37.5665, 126.978),  // 서울 시청 좌표
+        zoom: 10,
+      });
+
+      // 마커 추가
+      new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(37.5665, 126.978),
+        map: map,
+      });
+    }
+  }, []);
 
   const handleSendMessage = () => {
     if (message === '점심 먹을만한 곳 추천해줘') {
@@ -36,6 +52,9 @@ function App() {
           </li>
         ))}
       </ul>
+
+      {/* 네이버 지도 컴포넌트 */}
+      <div id="map" style={{ width: '100%', height: '400px' }}></div>
     </div>
   );
 }
