@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/axpichatbot/static/css/main.e6c13ad2.css",
-    "main.js": "/axpichatbot/static/js/main.b5945012.js",
+    "main.js": "/axpichatbot/static/js/main.bb38efa2.js",
     "index.html": "/axpichatbot/index.html",
     "main.e6c13ad2.css.map": "/axpichatbot/static/css/main.e6c13ad2.css.map",
-    "main.b5945012.js.map": "/axpichatbot/static/js/main.b5945012.js.map"
+    "main.bb38efa2.js.map": "/axpichatbot/static/js/main.bb38efa2.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.b5945012.js"
+    "static/js/main.bb38efa2.js"
   ]
 }
