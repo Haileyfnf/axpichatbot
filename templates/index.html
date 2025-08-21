@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맛집 추천 시스템</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId={{ NAVER_CLIENT_ID }}"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        #query {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            display: flex;
+            gap: 20px;
+        }
+        .map-container {
+            flex: 1;
+            height: 600px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .places-list {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            max-height: 600px;
+        }
+        .place-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .place-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .place-info {
+            color: #666;
+            margin: 5px 0;
+        }
+        .response {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-box">
+            <input type="text" id="query" placeholder="예: 맛집 추천해줘, 평점이 높은 식당 알려줘">
+            <button onclick="search()">검색</button>
+        </div>
+        
+        <div class="response" id="response"></div>
+        
+        <div class="result">
+            <div class="map-container" id="map"></div>
+            <div class="places-list" id="places"></div>
+        </div>
+    </div>
+
+    <script>
+        let map;
+        let markers = [];
+
+        // 네이버 지도 초기화
+        function initMap() {
+            map = new naver.maps.Map('map', {
+                center: new naver.maps.LatLng(37.5665, 126.9780), // 서울 시청
+                zoom: 12
+            });
+        }
+
+        // 마커 초기화
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
+        // 장소 표시
+        function displayPlaces(places) {
+            clearMarkers();
+            const placesList = document.getElementById('places');
+            placesList.innerHTML = '';
+
+            places.forEach(place => {
+                // 마커 생성
+                const marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(place.mapy, place.mapx),
+                    map: map,
+                    title: place.name
+                });
+                markers.push(marker);
+
+                // 장소 카드 생성
+                const card = document.createElement('div');
+                card.className = 'place-card';
+                card.innerHTML = `
+                    <h3>${place.name}</h3>
+                    <div class="place-info">카테고리: ${place.category}</div>
+                    <div class="place-info">주소: ${place.address}</div>
+                    <div class="place-info">평점: ${place.rate}</div>
+                    <div class="place-info">평균 가격: ${place.average_cost}</div>
+                    <div class="place-info">메뉴: ${place.menu}</div>
+                    <div class="place-info">운영시간: ${place.open_hours}</div>
+                    <div class="place-info">휴무일: ${place.dayoff}</div>
+                    <div class="place-info">연락처: ${place.contact}</div>
+                    <div class="place-info">편의시설: ${place.convenience}</div>
+                `;
+                placesList.appendChild(card);
+
+                // 마커 클릭 이벤트
+                naver.maps.Event.addListener(marker, 'click', function() {
+                    map.setCenter(marker.getPosition());
+                    map.setZoom(15);
+                });
+            });
+
+            // 첫 번째 장소로 지도 중심 이동
+            if (places.length > 0) {
+                map.setCenter(new naver.maps.LatLng(places[0].mapy, places[0].mapx));
+                map.setZoom(15);
+            }
+        }
+
+        // 검색 함수
+        function search() {
+            const query = document.getElementById('query').value;
+            if (!query) return;
+
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // 응답 표시
+                document.getElementById('response').innerHTML = data.response;
+
+                // 장소 표시
+                if (data.places && data.places.length > 0) {
+                    displayPlaces(data.places);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('검색 중 오류가 발생했습니다.');
+            });
+        }
+
+        // 엔터 키 이벤트
+        document.getElementById('query').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                search();
+            }
+        });
+
+        // 페이지 로드 시 지도 초기화
+        window.onload = initMap;
+    </script>
+</body>
+</html> 

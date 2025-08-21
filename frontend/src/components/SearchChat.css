@@ -1,0 +1,486 @@
+.search-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+  padding: 1rem;
+  background-color: #5347AA;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.backend-status {
+  background-color: #dc3545;
+  color: white;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.messages-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.backend-warning {
+  color: #dc2626;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 0.5rem;
+  background-color: #fee2e2;
+  border-radius: 0.5rem;
+}
+
+.message {
+  position: relative;
+  margin: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  max-width: 70%;
+  white-space: pre-wrap;
+  word-break: break-word;
+  animation: fadeIn 0.3s ease-in-out;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* 사용자 메시지 스타일 */
+.message.user {
+  background-color: #5347AA;
+  color: white;
+  margin-left: auto;
+  border-radius: 1.2rem 1.2rem 0 1.2rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message.user::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: #5347AA;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+/* 봇 메시지 스타일 */
+.message.bot {
+  background-color: #f0f0f0;
+  color: #333333;
+  margin-right: auto;
+  border-radius: 1.2rem 1.2rem 1.2rem 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message.bot::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: #f0f0f0;
+  clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}
+
+/* 에러 메시지 스타일 */
+.message.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  margin-right: auto;
+  border-radius: 1.2rem 1.2rem 1.2rem 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message.error::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: #fee2e2;
+  clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}
+
+/* 시스템 메시지 스타일 */
+.message.system {
+  background-color: #fef3c7;
+  color: #92400e;
+  margin-right: auto;
+  border-radius: 1.2rem 1.2rem 1.2rem 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message.system::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: #fef3c7;
+  clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}
+
+/* 메시지 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message p {
+  margin: 0;
+}
+
+.message p + p {
+  margin-top: 0.5rem;
+}
+
+.message-sender {
+  font-size: 12px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.message-text {
+  word-break: break-word;
+}
+
+.input-form {
+  display: flex;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  gap: 0.75rem;
+}
+
+.input-form input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 1.5rem;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  background-color: white;
+}
+
+.input-form input:focus {
+  outline: none;
+  border-color: #5347AA;
+  box-shadow: 0 0 0 3px rgba(83, 71, 170, 0.1);
+}
+
+.input-form button {
+  padding: 0.75rem 1.5rem;
+  background-color: #5347AA;
+  color: white;
+  border: none;
+  border-radius: 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.input-form button:hover:not(:disabled) {
+  background-color: #4338a3;
+  transform: translateY(-1px);
+}
+
+.input-form button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.input-form input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* 로딩 인디케이터 */
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 10px 0;
+  align-self: center;
+}
+
+.loading-dot {
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  border-radius: 50%;
+  background-color: #5347AA;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.search-mode {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 정보창 스타일 개선 */
+.info-window {
+  padding: 8px;
+  max-width: 250px;
+}
+
+.info-window h3 {
+  margin: 0 0 5px 0;
+  color: #5347AA;
+  font-size: 16px;
+}
+
+.info-window p {
+  margin: 3px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.info-window .place-name {
+  font-weight: bold;
+  color: #000;
+}
+
+.status-indicators {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* 추천 검색어 스타일 */
+.suggestions-container {
+  margin-top: 1.5rem;
+  padding: 0 1rem;
+}
+
+.suggestions-title {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.suggestions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.suggestion-button {
+  padding: 0.5rem 1rem;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.suggestion-button:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.suggestion-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 컨텍스트 정보 메시지 스타일 */
+.message.context-info .message-content {
+  background-color: #f8f7fd;
+  border-left: 3px solid #5347AA;
+}
+
+.message.context-info .message-sender {
+  color: #5347AA;
+}
+
+/* 위치 정보 상태 표시 */
+.location-status {
+  background-color: rgba(40, 167, 69, 0.9);
+  color: white;
+  text-align: center;
+  padding: 5px 0;
+  font-size: 14px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.location-status p {
+  margin: 0;
+}
+
+/* 앱 스타일 업데이트 */
+.app {
+  position: relative;
+  padding-top: 30px; /* 위치 상태 표시줄 공간 확보 */
+}
+
+/* 정보 창 추가 정보 스타일 */
+.additional-info {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.info-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #5347AA;
+  margin: 0 0 4px 0;
+}
+
+.info-content {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* 사용자 위치 마커 스타일 - NaverMap.css에 추가 */
+.user-location-marker {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #4285F4;
+  border: 2px solid white;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+}
+
+.place-item {
+  margin: 6px 0;
+  padding-left: 15px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.place-item:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.search-chat-container {
+  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.search-button {
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover {
+  background-color: #2563eb;
+}
+
+.search-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.suggestions {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.suggestion-chip {
+  padding: 0.25rem 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.suggestion-chip:hover {
+  background-color: #e5e7eb;
+} 
